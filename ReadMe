@@ -1,0 +1,41 @@
+#Zach Hendricks, Carter, Remember to put her name once I remember it
+
+import pandas as pd
+
+import matplotlib.pyplot as plt
+
+data = pd.read_csv('housing.csv')
+
+data.info
+
+data.price.mean()
+
+def getAverageHousePricebyRooms():
+    #gather the data
+    X_Large = data[(data.bedrooms >= 5)].price.mean()
+    Large = data[(data.bedrooms == 4)].price.mean()
+    Medium = data[(data.bedrooms == 3)].price.mean()
+    Small = data[(data.bedrooms == 2)].price.mean()
+    One_room =data[(data.bedrooms == 1)].price.mean()
+    
+    #print statements, probably don't need these 
+    print("\nExtra large houses average price is : %0.2f$" % X_Large)
+    print("\nExtra large houses average price is : %0.2f$" % Large)
+    print("\nExtra large houses average price is : %0.2f$" % Medium)
+    print("\nExtra large houses average price is : %0.2f$" % Small)
+    print("\nExtra large houses average price is : %0.2f$" % One_room)
+    
+    #Barchart
+    plot_data = X_Large, Large, Medium, Small, One_room
+    labels = ["Extra Large" , "Large", "Medium", "Small", "One Room"]
+    fig = plt.figure()
+    ax = fig.add_axes([0,0,1,1])
+    ax.bar(labels, plot_data, color = "blue", width = 0.6)
+    ax.set_xlabel("Number of Bedrooms")
+    ax.set_ylabel("Average House Price")
+    ax.set_title("Average House Price by Number of Bedrooms")
+    fig.savefig("Average House Price by NUmber of Bedrooms.png", bbox_inches = "tight")
+    plt.show()
+
+
+getAverageHousePricebyRooms()
