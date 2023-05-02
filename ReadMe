@@ -1,7 +1,7 @@
 #Zach Hendricks, Carter, Remember to put her name once I remember it
 
 import pandas as pd
-
+import matplotlib.ticker as mtick
 import matplotlib.pyplot as plt
 
 data = pd.read_csv('housing.csv')
@@ -12,30 +12,75 @@ data.price.mean()
 
 def getAverageHousePricebyRooms():
     #gather the data
-    X_Large = data[(data.bedrooms >= 5)].price.mean()
-    Large = data[(data.bedrooms == 4)].price.mean()
-    Medium = data[(data.bedrooms == 3)].price.mean()
-    Small = data[(data.bedrooms == 2)].price.mean()
-    One_room =data[(data.bedrooms == 1)].price.mean()
+    X_Large = (data[(data.bedrooms >= 5)].price.mean()/10)
+    Large = (data[(data.bedrooms == 4)].price.mean()/10)
+    Medium = (data[(data.bedrooms == 3)].price.mean()/10)
+    Small = (data[(data.bedrooms == 2)].price.mean()/10)
+    One_room = (data[(data.bedrooms == 1)].price.mean()/10)
     
     #print statements, probably don't need these 
-    print("\nExtra large houses average price is : %0.2f$" % X_Large)
-    print("\nExtra large houses average price is : %0.2f$" % Large)
-    print("\nExtra large houses average price is : %0.2f$" % Medium)
-    print("\nExtra large houses average price is : %0.2f$" % Small)
-    print("\nExtra large houses average price is : %0.2f$" % One_room)
+    print("\nHouses with 5 or more bedrooms average price is ${:,.0f}".format(X_Large))
+    print("\nHouses with 4 bedrooms average price is ${:,.0f}".format(Large))
+    print("\nHouses with 3 bedrooms average price is ${:,.0f}".format(Medium))
+    print("\nHouses with 2 bedrooms average price is ${:,.0f}".format(Small))
+    print("\nHouses with 1 bedroom average price is ${:,.0f}".format(One_room))
     
     #Barchart
     plot_data = X_Large, Large, Medium, Small, One_room
-    labels = ["Extra Large" , "Large", "Medium", "Small", "One Room"]
+    labels = ["5 or more" , "4", "3", "2", "1"]
     fig = plt.figure()
     ax = fig.add_axes([0,0,1,1])
     ax.bar(labels, plot_data, color = "blue", width = 0.6)
+    #format y-axis with $ and commas
+    fmt = "${x:,.0f}"
+    tick = mtick.StrMethodFormatter(fmt)
+    ax.yaxis.set_major_formatter(tick)
+    
     ax.set_xlabel("Number of Bedrooms")
     ax.set_ylabel("Average House Price")
     ax.set_title("Average House Price by Number of Bedrooms")
     fig.savefig("Average House Price by NUmber of Bedrooms.png", bbox_inches = "tight")
     plt.show()
 
+def getAverageHousePricebySqft():
+    #gather the data
+    ''' arbitrary numbers for sqft. for this purposes houses will be defined as:
+        Small <2500
+        Medium <3500
+        Large < 4800
+        Extra Large >= 4800 '''
+    
+    
+    Small = (data[(data.area < 2500)].price.mean()/10)
+    Medium = (data[(data.area < 3500)].price.mean()/10)
+    Large = (data[(data.area < 4800)].price.mean()/10)
+    X_Large = (data[(data.area >= 4800 )].price.mean()/10)
+    
+    #print statements, probably don't need these 
+    print("\nSmall Houses have an average price of ${:,.0f}".format(Small))
+    print("\nMedium Houses have an average price of ${:,.0f}".format(Medium))
+    print("\nLarge Houses have an average price of ${:,.0f}".format(Large))
+    print("\nExtra Large Houses have an average price of ${:,.0f}".format(X_Large))
+    
+    #Barchart
+    plot_data = X_Large, Large, Medium, Small
+    labels = ["Extra Large" , "Large", "Medium", "Small"]
+    fig = plt.figure()
+    ax = fig.add_axes([0,0,1,1])
+    ax.bar(labels, plot_data, color = "Red", width = 0.8)
+    
+    #format y-axis with $ and commas
+    fmt = "${x:,.0f}"
+    tick = mtick.StrMethodFormatter(fmt)
+    ax.yaxis.set_major_formatter(tick)
+    
+    ax.set_xlabel("Size of House in Sq ft")
+    ax.set_ylabel("Average House Price by Sq ft")
+    ax.set_title("Average House Price by Sq ft")
+    fig.savefig("Average House Price by Sq ft.png", bbox_inches = "tight")
+    plt.show()
+
+
 
 getAverageHousePricebyRooms()
+getAverageHousePricebySqft()
